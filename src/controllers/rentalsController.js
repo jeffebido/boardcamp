@@ -3,15 +3,37 @@ import dayjs from 'dayjs';
 
 export async function getRentals(req, res) {
 
-    const rentals  = await db.query(`SELECT rentals.*, 
-                                        games.name AS "gameName", 
-                                        games."categoryId", 
-                                        customers.name AS "customerName", 
-                                        categories.name AS "categoryName" 
-                                        FROM rentals
-                                        JOIN games ON rentals."gameId" = games."id"
-                                        JOIN categories ON games."categoryId" = categories.id
-                                        JOIN customers ON rentals."customerId" = customers.id`);
+    let filters = [];
+
+    let query  = `SELECT rentals.*, 
+                    games.name AS "gameName", 
+                    games."categoryId", 
+                    customers.name AS "customerName", 
+                    categories.name AS "categoryName" 
+                FROM rentals
+                JOIN games ON rentals."gameId" = games."id"
+                JOIN categories ON games."categoryId" = categories.id
+                JOIN customers ON rentals."customerId" = customers.id`;
+
+    if(req.query.customerId ){
+        filters.push( `customers.id = '${req.query.customerId}'`);
+    }
+    if(req.query.gameId  ){
+        filters.push(`games.id = '${req.query.gameId}'`);
+    }
+
+    if(filters.length == 1){
+
+        query = query + ' WHERE ' + filters[0];
+    }else if(filters.length == 2){
+        query = query + ' WHERE ' + filters[0] + ' AND '+ filters[1]; 
+    }
+
+
+
+
+
+    const rentals  = await db.query(query);
 
     
     const result = rentals.rows.map(  (el) => {
