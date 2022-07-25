@@ -8,4 +8,5 @@ const router = Router();
 
 router.get("/categories", getCategories);
 router.post("/categories", categoriesMiddleware, newCategorie);
+
 export default router;

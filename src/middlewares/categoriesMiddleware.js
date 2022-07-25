@@ -3,11 +3,13 @@ import categoriesSchema from "../schemas/categoriesSchema.js";
 export async function categoriesMiddleware(req, res, next) {
    
     
-    const validate = categoriesSchema.validate({...req.body, type: req.header('Type')});
+    const validate = categoriesSchema.validate(req.body);
 
+
+    //Checa se valor for null ou string
     if (validate.error) {
-        return res.sendStatus(422);
-    }
+        return res.sendStatus(400);
+    }   
 
   next();
 }
