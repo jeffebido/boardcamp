@@ -17,17 +17,25 @@ export async function getRentals(req, res) {
     const result = rentals.rows.map(  (el) => {
 
 
-        return ({...el,
-            customer: {
-                id: el.customerId,
-                name: el.customerName,
-            },
-            game: {
-                id: el.gameId,
-                name: el.gameName,
-                categoryId: el.categoryId,
-                categoryName: el.categoryName,
-            }
+        return ({   
+                id: el.id,
+                customerId: el.customerId,
+                gameId: el.gameId,
+                rentDate: dayjs(el.rentDate).format('YYYY-MM-DD') ,
+                daysRented: el.daysRented,
+                returnDate: el.returnDate, // troca pra uma data quando já devolvido
+                originalPrice: el.originalPrice,
+                delayFee: el.delayFee,
+                customer: {
+                    id: el.customerId,
+                    name: el.customerName,
+                },
+                game: {
+                    id: el.gameId,
+                    name: el.gameName,
+                    categoryId: el.categoryId,
+                    categoryName: el.categoryName,
+                }
         });
         
     });
